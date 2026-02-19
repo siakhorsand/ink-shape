@@ -5,7 +5,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from PIL import Image
 import tensorflow as tf
 
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__, static_folder='static', static_url_path='')
 
 # to match the order used in training
 CLASS_NAMES = ['circle', 'square', 'triangle', 'hexagon', 'octagon']

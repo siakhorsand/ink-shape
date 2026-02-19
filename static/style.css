@@ -6,32 +6,56 @@
     box-sizing: border-box;
 }
 
+/* ─── Design tokens ───────────────────────────────────────── */
 :root {
     --bg:             #111110;
     --surface:        #1a1917;
-    --wood-top:       #D4965A;
-    --wood-mid:       #A66C2C;
     --wood-dark:      #6B4218;
     --wood-shadow:    #3D2208;
     --canvas-bg:      #F7F4EE;
-    --canvas-texture: #EDE9E0;
     --text:           #E8E5DF;
     --text-muted:     #6B6860;
+    --text-dim:       #3A3835;
     --accent:         #60A5FA;
+    --border:         #1E1C1A;
 }
 
+/* ─── Base ────────────────────────────────────────────────── */
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     background: var(--bg);
     font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
-    padding: 48px 20px 60px;
+    padding: 48px 32px;
 }
 
-/* ─── Easel ──────────────────────────────*/
+/* ─── Hint ────────────────────────────────────────────────── */
+.hint {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+}
+
+/* ─── Workspace (easel + results side by side) ────────────── */
+.workspace {
+    display: flex;
+    align-items: center;
+    gap: 56px;
+}
+
+.workspace__left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+/* ─── Easel ───────────────────────────────────────────────── */
 .easel {
     position: relative;
     display: flex;
@@ -80,7 +104,7 @@ body {
     background-repeat: no-repeat;
 }
 
-/* ─── Canvas frame ─────────*/
+/* ─── Canvas frame ────────────────────────────────────────── */
 .canvas-frame {
     position: relative;
     padding: 18px;
@@ -154,24 +178,17 @@ body {
     z-index: 2;
 }
 
-/* ─── Controls ────────────────────────────────────────────── */
-.controls {
-    margin-top: 36px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
+/* ─── Clear button ────────────────────────────────────────── */
 .btn-clear {
     background: transparent;
     color: var(--text-muted);
-    border: 1px solid #2a2928;
-    padding: 7px 18px;
+    border: 1px solid var(--border);
+    padding: 7px 20px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     transition: color 0.15s, border-color 0.15s;
     font-family: inherit;
@@ -179,90 +196,92 @@ body {
 
 .btn-clear:hover {
     color: var(--text);
-    border-color: #444;
+    border-color: #383532;
 }
 
 .btn-clear:active {
     transform: scale(0.98);
 }
 
-/* ─── Results ─────────────────────────────────────────────── */
+/* ─── Results panel ───────────────────────────────────────── */
 .results {
-    margin-top: 36px;
-    width: 320px;
-    text-align: center;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 .prediction-label {
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: 200;
     color: var(--text);
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: capitalize;
-    min-height: 3rem;
+    min-height: 2.6rem;
     line-height: 1;
-    transition: opacity 0.2s;
 }
 
 .prediction-label--unsure {
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-weight: 400;
     color: var(--text-muted);
+    letter-spacing: 0.06em;
 }
 
 .confidence-text {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     color: var(--text-muted);
     letter-spacing: 0.18em;
     text-transform: uppercase;
     margin-top: 6px;
-    min-height: 1.2rem;
+    min-height: 1rem;
 }
 
 .divider {
-    width: 32px;
+    width: 24px;
     height: 1px;
-    background: #252422;
-    margin: 24px auto;
-    transition: opacity 0.3s;
+    background: var(--border);
+    margin: 20px 0;
     opacity: 0;
+    transition: opacity 0.3s;
 }
 
+/* ─── Probability bars ────────────────────────────────────── */
 .probability-bars {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 11px;
 }
 
 .prob-row {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     animation: fadeUp 0.25s ease both;
 }
 
 .prob-name {
-    font-size: 10px;
+    font-size: 9px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-muted);
-    width: 62px;
+    width: 54px;
     text-align: right;
     flex-shrink: 0;
 }
 
 .prob-track {
     flex: 1;
-    height: 2px;
-    background: #222120;
-    border-radius: 2px;
+    height: 1px;
+    background: var(--border);
+    border-radius: 1px;
     overflow: hidden;
 }
 
 .prob-fill {
     height: 100%;
-    background: #333;
-    border-radius: 2px;
+    background: #2E2C2A;
+    border-radius: 1px;
     transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
 }
 
@@ -271,9 +290,9 @@ body {
 }
 
 .prob-pct {
-    font-size: 10px;
+    font-size: 9px;
     color: var(--text-muted);
-    width: 36px;
+    width: 32px;
     text-align: right;
     font-variant-numeric: tabular-nums;
     flex-shrink: 0;
@@ -283,16 +302,8 @@ body {
     color: var(--accent);
 }
 
-.hint {
-    font-size: 10px;
-    color: var(--text-muted);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    text-align: center;
-    margin-bottom: 32px;
-}
-
+/* ─── Animations ──────────────────────────────────────────── */
 @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(6px); }
+    from { opacity: 0; transform: translateY(5px); }
     to   { opacity: 1; transform: translateY(0); }
 }

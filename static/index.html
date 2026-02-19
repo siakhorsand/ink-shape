@@ -10,23 +10,26 @@
 
     <p class="hint">Draw a shape to identify</p>
 
-    <div class="easel">
-        <div class="easel-clamp"></div>
-        <div class="canvas-frame">
-            <div class="canvas-texture"></div>
-            <canvas id="drawingCanvas" width="320" height="320"></canvas>
+    <div class="workspace">
+
+        <div class="workspace__left">
+            <div class="easel">
+                <div class="easel-clamp"></div>
+                <div class="canvas-frame">
+                    <div class="canvas-texture"></div>
+                    <canvas id="drawingCanvas" width="320" height="320"></canvas>
+                </div>
+            </div>
+            <button id="clearBtn" class="btn-clear">Clear</button>
         </div>
-    </div>
 
-    <div class="controls">
-        <button id="clearBtn" class="btn-clear">Clear</button>
-    </div>
+        <div class="results">
+            <div id="predictionLabel" class="prediction-label"></div>
+            <div id="confidenceText" class="confidence-text"></div>
+            <div id="divider" class="divider"></div>
+            <div id="probabilityBars" class="probability-bars"></div>
+        </div>
 
-    <div class="results">
-        <div id="predictionLabel" class="prediction-label"></div>
-        <div id="confidenceText" class="confidence-text"></div>
-        <div id="divider" class="divider"></div>
-        <div id="probabilityBars" class="probability-bars"></div>
     </div>
 
     <script src="app.js" defer></script>
