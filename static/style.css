@@ -1,0 +1,298 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg:             #111110;
+    --surface:        #1a1917;
+    --wood-top:       #D4965A;
+    --wood-mid:       #A66C2C;
+    --wood-dark:      #6B4218;
+    --wood-shadow:    #3D2208;
+    --canvas-bg:      #F7F4EE;
+    --canvas-texture: #EDE9E0;
+    --text:           #E8E5DF;
+    --text-muted:     #6B6860;
+    --accent:         #60A5FA;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    padding: 48px 20px 60px;
+}
+
+/* ─── Easel ──────────────────────────────*/
+.easel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.easel-clamp {
+    width: calc(100% + 48px);
+    height: 14px;
+    background: linear-gradient(180deg, #D4965A 0%, #A66C2C 45%, #7A4E1C 100%);
+    border-radius: 7px;
+    position: relative;
+    z-index: 10;
+    box-shadow:
+        0 3px 6px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.easel-clamp::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 7px;
+    background: repeating-linear-gradient(
+        88deg,
+        transparent,
+        transparent 8px,
+        rgba(0, 0, 0, 0.04) 8px,
+        rgba(0, 0, 0, 0.04) 10px
+    );
+}
+
+.easel-clamp::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 16px;
+    right: 16px;
+    height: 8px;
+    background:
+        radial-gradient(circle 4px at 8px 4px, #8B6030 60%, transparent 60%),
+        radial-gradient(circle 4px at calc(100% - 8px) 4px, #8B6030 60%, transparent 60%);
+    background-repeat: no-repeat;
+}
+
+/* ─── Canvas frame ─────────*/
+.canvas-frame {
+    position: relative;
+    padding: 18px;
+    background: linear-gradient(135deg, #C8844A 0%, #9A6228 20%, #7A4E1C 50%, #B07030 75%, #C8844A 100%);
+    border-radius: 3px;
+    margin-top: -2px;
+    box-shadow:
+        0 4px 0 var(--wood-dark),
+        0 6px 0 var(--wood-shadow),
+        0 10px 30px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        inset 1px 0 0 rgba(255, 255, 255, 0.08),
+        inset -1px 0 0 rgba(0, 0, 0, 0.15),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.canvas-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 3px;
+    background: repeating-linear-gradient(
+        92deg,
+        transparent,
+        transparent 5px,
+        rgba(0, 0, 0, 0.025) 5px,
+        rgba(0, 0, 0, 0.025) 7px
+    );
+    pointer-events: none;
+}
+
+.canvas-frame::after {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border-radius: 1px;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.35), inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+    z-index: 1;
+}
+
+#drawingCanvas {
+    display: block;
+    background: var(--canvas-bg);
+    cursor: crosshair;
+    border-radius: 1px;
+    position: relative;
+    z-index: 0;
+}
+
+.canvas-texture {
+    position: absolute;
+    inset: 18px;
+    border-radius: 1px;
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(0, 0, 0, 0.012) 3px,
+            rgba(0, 0, 0, 0.012) 4px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 3px,
+            rgba(0, 0, 0, 0.012) 3px,
+            rgba(0, 0, 0, 0.012) 4px
+        );
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ─── Controls ────────────────────────────────────────────── */
+.controls {
+    margin-top: 36px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.btn-clear {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid #2a2928;
+    padding: 7px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.15s, border-color 0.15s;
+    font-family: inherit;
+}
+
+.btn-clear:hover {
+    color: var(--text);
+    border-color: #444;
+}
+
+.btn-clear:active {
+    transform: scale(0.98);
+}
+
+/* ─── Results ─────────────────────────────────────────────── */
+.results {
+    margin-top: 36px;
+    width: 320px;
+    text-align: center;
+}
+
+.prediction-label {
+    font-size: 2.2rem;
+    font-weight: 200;
+    color: var(--text);
+    letter-spacing: 0.06em;
+    text-transform: capitalize;
+    min-height: 3rem;
+    line-height: 1;
+    transition: opacity 0.2s;
+}
+
+.prediction-label--unsure {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+.confidence-text {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 6px;
+    min-height: 1.2rem;
+}
+
+.divider {
+    width: 32px;
+    height: 1px;
+    background: #252422;
+    margin: 24px auto;
+    transition: opacity 0.3s;
+    opacity: 0;
+}
+
+.probability-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.prob-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: fadeUp 0.25s ease both;
+}
+
+.prob-name {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    width: 62px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.prob-track {
+    flex: 1;
+    height: 2px;
+    background: #222120;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.prob-fill {
+    height: 100%;
+    background: #333;
+    border-radius: 2px;
+    transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+}
+
+.prob-fill--top {
+    background: var(--accent);
+}
+
+.prob-pct {
+    font-size: 10px;
+    color: var(--text-muted);
+    width: 36px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+}
+
+.prob-pct--top {
+    color: var(--accent);
+}
+
+.hint {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
