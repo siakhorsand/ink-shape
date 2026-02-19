@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShapeNet</title>
+    <title>Ink Shape</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <p class="hint">Draw a shape to identify</p>
-
     <div class="workspace">
 
         <div class="workspace__left">
+            <p class="hint">Draw a shape to identify</p>
             <div class="easel">
                 <div class="easel-clamp"></div>
                 <div class="canvas-frame">
@@ -26,7 +25,8 @@
         <div class="results">
             <div id="predictionLabel" class="prediction-label"></div>
             <div id="confidenceText" class="confidence-text"></div>
-            <div id="divider" class="divider"></div>
+            <div class="results__divider"></div>
+            <span class="results__section-label">Breakdown</span>
             <div id="probabilityBars" class="probability-bars"></div>
         </div>
 

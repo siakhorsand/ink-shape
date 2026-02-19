@@ -8,16 +8,17 @@
 
 /* ─── Design tokens ───────────────────────────────────────── */
 :root {
-    --bg:             #111110;
-    --surface:        #1a1917;
-    --wood-dark:      #6B4218;
-    --wood-shadow:    #3D2208;
-    --canvas-bg:      #F7F4EE;
-    --text:           #E8E5DF;
-    --text-muted:     #6B6860;
-    --text-dim:       #3A3835;
-    --accent:         #60A5FA;
-    --border:         #1E1C1A;
+    --bg:          #111110;
+    --wood-dark:   #6B4218;
+    --wood-shadow: #3D2208;
+    --canvas-bg:   #F7F4EE;
+    --text:        #E8E5DF;
+    --text-muted:  #6B6860;
+    --text-dim:    #2E2C2A;
+    --accent:      #60A5FA;
+    --border:      #1E1C1A;
+    --skeleton:    #1A1917;
+    --skeleton-hi: #242220;
 }
 
 /* ─── Base ────────────────────────────────────────────────── */
@@ -32,16 +33,17 @@ body {
     padding: 48px 32px;
 }
 
-/* ─── Hint ────────────────────────────────────────────────── */
+/* ─── Hint — tier 4: instructional, barely-there ─────────── */
 .hint {
     font-size: 10px;
-    color: var(--text-dim);
+    color: var(--text-muted);
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    margin-bottom: 36px;
+    margin-bottom: 20px;
+    align-self: center;
 }
 
-/* ─── Workspace (easel + results side by side) ────────────── */
+/* ─── Workspace ───────────────────────────────────────────── */
 .workspace {
     display: flex;
     align-items: center;
@@ -83,10 +85,8 @@ body {
     border-radius: 7px;
     background: repeating-linear-gradient(
         88deg,
-        transparent,
-        transparent 8px,
-        rgba(0, 0, 0, 0.04) 8px,
-        rgba(0, 0, 0, 0.04) 10px
+        transparent, transparent 8px,
+        rgba(0, 0, 0, 0.04) 8px, rgba(0, 0, 0, 0.04) 10px
     );
 }
 
@@ -104,7 +104,6 @@ body {
     background-repeat: no-repeat;
 }
 
-/* ─── Canvas frame ────────────────────────────────────────── */
 .canvas-frame {
     position: relative;
     padding: 18px;
@@ -128,10 +127,8 @@ body {
     border-radius: 3px;
     background: repeating-linear-gradient(
         92deg,
-        transparent,
-        transparent 5px,
-        rgba(0, 0, 0, 0.025) 5px,
-        rgba(0, 0, 0, 0.025) 7px
+        transparent, transparent 5px,
+        rgba(0, 0, 0, 0.025) 5px, rgba(0, 0, 0, 0.025) 7px
     );
     pointer-events: none;
 }
@@ -141,7 +138,9 @@ body {
     position: absolute;
     inset: 14px;
     border-radius: 1px;
-    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.35), inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+    box-shadow:
+        inset 0 2px 10px rgba(0, 0, 0, 0.35),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.1);
     pointer-events: none;
     z-index: 1;
 }
@@ -162,17 +161,13 @@ body {
     background-image:
         repeating-linear-gradient(
             0deg,
-            transparent,
-            transparent 3px,
-            rgba(0, 0, 0, 0.012) 3px,
-            rgba(0, 0, 0, 0.012) 4px
+            transparent, transparent 3px,
+            rgba(0, 0, 0, 0.012) 3px, rgba(0, 0, 0, 0.012) 4px
         ),
         repeating-linear-gradient(
             90deg,
-            transparent,
-            transparent 3px,
-            rgba(0, 0, 0, 0.012) 3px,
-            rgba(0, 0, 0, 0.012) 4px
+            transparent, transparent 3px,
+            rgba(0, 0, 0, 0.012) 3px, rgba(0, 0, 0, 0.012) 4px
         );
     pointer-events: none;
     z-index: 2;
@@ -208,9 +203,9 @@ body {
     width: 200px;
     display: flex;
     flex-direction: column;
-    gap: 0;
 }
 
+/* tier 1: prediction — the primary answer */
 .prediction-label {
     font-size: 2rem;
     font-weight: 200;
@@ -228,6 +223,7 @@ body {
     letter-spacing: 0.06em;
 }
 
+/* tier 2: confidence — secondary metric */
 .confidence-text {
     font-size: 0.65rem;
     color: var(--text-muted);
@@ -237,16 +233,25 @@ body {
     min-height: 1rem;
 }
 
-.divider {
-    width: 24px;
+/* structural divider — always present */
+.results__divider {
+    width: 100%;
     height: 1px;
     background: var(--border);
-    margin: 20px 0;
-    opacity: 0;
-    transition: opacity 0.3s;
+    margin: 22px 0 16px;
 }
 
-/* ─── Probability bars ────────────────────────────────────── */
+/* tier 3: section label — smallest, most muted */
+.results__section-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    display: block;
+}
+
+/* tier 3: breakdown bars */
 .probability-bars {
     display: flex;
     flex-direction: column;
@@ -257,17 +262,21 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    animation: fadeUp 0.25s ease both;
 }
 
 .prob-name {
     font-size: 9px;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-muted);
     width: 54px;
     text-align: right;
     flex-shrink: 0;
+    transition: color 0.3s;
+}
+
+.prob-name--top {
+    color: var(--text);
 }
 
 .prob-track {
@@ -280,9 +289,9 @@ body {
 
 .prob-fill {
     height: 100%;
-    background: #2E2C2A;
+    background: var(--text-dim);
     border-radius: 1px;
-    transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
 }
 
 .prob-fill--top {
@@ -296,10 +305,29 @@ body {
     text-align: right;
     font-variant-numeric: tabular-nums;
     flex-shrink: 0;
+    transition: color 0.3s;
 }
 
 .prob-pct--top {
     color: var(--accent);
+}
+
+/* ─── Skeleton state ──────────────────────────────────────── */
+.prob-row--skeleton .prob-name {
+    color: var(--text-dim);
+}
+
+.prob-row--skeleton .prob-fill {
+    background: var(--skeleton-hi);
+}
+
+.skeleton-pill {
+    display: inline-block;
+    width: 26px;
+    height: 7px;
+    border-radius: 3px;
+    background: var(--skeleton-hi);
+    vertical-align: middle;
 }
 
 /* ─── Animations ──────────────────────────────────────────── */

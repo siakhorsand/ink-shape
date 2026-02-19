@@ -1,13 +1,14 @@
-const CANVAS_BG       = '#F7F4EE';
-const STROKE_COLOR    = '#1C1A17';
-const STROKE_WIDTH    = 22;
+const CANVAS_BG            = '#F7F4EE';
+const STROKE_COLOR         = '#1C1A17';
+const STROKE_WIDTH         = 22;
 const CONFIDENCE_THRESHOLD = 0.55;
+const CLASS_NAMES          = ['circle', 'square', 'triangle', 'hexagon', 'octagon'];
+const SKELETON_WIDTHS      = [58, 42, 71, 35, 50];
 
 const canvas    = document.getElementById('drawingCanvas');
 const ctx       = canvas.getContext('2d');
 const predEl    = document.getElementById('predictionLabel');
 const confEl    = document.getElementById('confidenceText');
-const dividerEl = document.getElementById('divider');
 const barsEl    = document.getElementById('probabilityBars');
 const clearBtn  = document.getElementById('clearBtn');
 
@@ -78,20 +79,37 @@ canvas.addEventListener('touchend', e => {
     canvas.dispatchEvent(new MouseEvent('mouseup'));
 }, { passive: false });
 
+function initSkeletons() {
+    barsEl.innerHTML = '';
+    CLASS_NAMES.forEach((name, i) => {
+        const row = document.createElement('div');
+        row.className     = 'prob-row prob-row--skeleton';
+        row.dataset.shape = name;
+        row.innerHTML = `
+            <span class="prob-name">${name}</span>
+            <div class="prob-track">
+                <div class="prob-fill" style="width:${SKELETON_WIDTHS[i]}%"></div>
+            </div>
+            <span class="prob-pct"><span class="skeleton-pill"></span></span>
+        `;
+        barsEl.appendChild(row);
+    });
+}
+
 // ─── Clear ─────────────────────────────────────────────────────
 function clearCanvas() {
     ctx.fillStyle = CANVAS_BG;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    predEl.textContent  = '';
-    predEl.className    = 'prediction-label';
-    confEl.textContent  = '';
-    dividerEl.style.opacity = '0';
-    barsEl.innerHTML    = '';
+    predEl.textContent = '';
+    predEl.className   = 'prediction-label';
+    confEl.textContent = '';
     hasDrawn = false;
+    initSkeletons();
 }
 
 clearBtn.addEventListener('click', clearCanvas);
 
+// ─── Results ───────────────────────────────────────────────────
 function renderPrediction(data) {
     const isUnsure = data.confidence < CONFIDENCE_THRESHOLD;
 
@@ -105,48 +123,33 @@ function renderPrediction(data) {
         confEl.textContent = `${(data.confidence * 100).toFixed(1)}% confidence`;
     }
 
-    dividerEl.style.opacity = '1';
     renderBars(data.probabilities);
 }
 
 function renderBars(probabilities) {
     const sorted   = Object.entries(probabilities).sort((a, b) => b[1] - a[1]);
     const topShape = sorted[0][0];
-    const existing = barsEl.querySelectorAll('.prob-row');
 
-    if (existing.length === 0) {
-        sorted.forEach(([shape, prob], i) => {
-            const pct   = (prob * 100).toFixed(1);
-            const isTop = shape === topShape;
-            const row   = document.createElement('div');
-            row.className        = 'prob-row';
-            row.dataset.shape    = shape;
-            row.style.animationDelay = `${i * 0.05}s`;
-            row.innerHTML = `
-                <span class="prob-name">${shape}</span>
-                <div class="prob-track">
-                    <div class="prob-fill ${isTop ? 'prob-fill--top' : ''}" style="width:${pct}%"></div>
-                </div>
-                <span class="prob-pct ${isTop ? 'prob-pct--top' : ''}">${pct}%</span>
-            `;
-            barsEl.appendChild(row);
-        });
-    } else {
-        sorted.forEach(([shape, prob]) => {
-            const row = barsEl.querySelector(`[data-shape="${shape}"]`);
-            if (!row) return;
-            const pct   = (prob * 100).toFixed(1);
-            const isTop = shape === topShape;
+    sorted.forEach(([shape, prob]) => {
+        const row = barsEl.querySelector(`[data-shape="${shape}"]`);
+        if (!row) return;
 
-            const fill = row.querySelector('.prob-fill');
-            fill.style.width = `${pct}%`;
-            fill.className   = `prob-fill ${isTop ? 'prob-fill--top' : ''}`;
+        const pct   = (prob * 100).toFixed(1);
+        const isTop = shape === topShape;
 
-            const pctEl = row.querySelector('.prob-pct');
-            pctEl.textContent = `${pct}%`;
-            pctEl.className   = `prob-pct ${isTop ? 'prob-pct--top' : ''}`;
-        });
-    }
+        row.classList.remove('prob-row--skeleton');
+
+        const fill = row.querySelector('.prob-fill');
+        fill.style.width = `${pct}%`;
+        fill.className   = `prob-fill${isTop ? ' prob-fill--top' : ''}`;
+
+        const pctEl = row.querySelector('.prob-pct');
+        pctEl.textContent = `${pct}%`;
+        pctEl.className   = `prob-pct${isTop ? ' prob-pct--top' : ''}`;
+
+        const nameEl = row.querySelector('.prob-name');
+        nameEl.className = `prob-name${isTop ? ' prob-name--top' : ''}`;
+    });
 }
 
 function predict() {
@@ -171,3 +174,4 @@ function predict() {
 }
 
 initCanvas();
+initSkeletons();
